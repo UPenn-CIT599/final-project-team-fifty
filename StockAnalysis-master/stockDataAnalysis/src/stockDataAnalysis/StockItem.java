@@ -5,13 +5,13 @@ package stockDataAnalysis;
  */
 public class StockItem {
 	
-	String date;
-	String stockCode;
-	String stockName;
-	double shortQty;
+	public String date;
+	public String stockCode;
+	public String stockName;
+	public double shortQty;
 	
-	double shortRatio; // Ratio: short position (Quantity) / stock outstanding 
-	double outShares; // Outstanding shares
+	public double shortRatio; // Ratio: short position (Quantity) / stock outstanding 
+	public double outShares; // Outstanding shares
 	
 	/*
 	// For Japan
@@ -48,6 +48,10 @@ public class StockItem {
 		this.shortRatio = shortRatio;
 	}
 	
+	public StockItem() {
+		// TODO Auto-generated constructor stub
+	}
+
 	public String getDate() {
 		return date;
 	}
