@@ -1,3 +1,4 @@
+
 package stockDataAnalysis;
 
 import static org.junit.Assert.assertNotSame;

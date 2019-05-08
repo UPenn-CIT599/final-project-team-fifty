@@ -29,16 +29,17 @@ public class JapanStock implements IGetStockData {
 	 * @see stockDataAnalysis.IGetStockData#getShortPositions(java.lang.String, java.lang.String, java.lang.String)
 	 */
 	@Override
-	public ArrayList <StockItem>  getShortPositions(String date) {
+	public ArrayList <StockItem> getShortPositions(String date) {
 		String urlBase;
 		urlBase = getStockBaseUrl(date);
+		//System.out.println(urlBase);
 		ArrayList <StockItem> list;
 		if (urlBase == null) {
 			System.out.println("Could not get short positions");
 			return null;
 		}
 
-		//Save webpage in current path
+		//Save web page in current path
 		Path currentRelativePath = Paths.get("");
 		String httpFilePath = currentRelativePath.toAbsolutePath().toString();
 		httpFilePath = httpFilePath + "/temp";
@@ -60,6 +61,7 @@ public class JapanStock implements IGetStockData {
 	
             File file = new File(httpFilePath + "/" + fileName);
  
+            // User POI API (reference: http://poi.apache.org/) for reading and writing Excel sheet
             Workbook book;
 			try {
 				book = Workbook.getWorkbook(file);
@@ -70,13 +72,14 @@ public class JapanStock implements IGetStockData {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} 
-           
 		return null;
 	}
 	
 
 	/**
 	 * Get the time difference in month between input date to current Japan local time
+	 * This is to make sure that the input date is not later than the current date and
+	 * that the input date doesn't go back beyond 1 year (only 1 year of record is available)
 	 * @param date : format should be "yyyymmdd". it should be Japan local time
 	 * @return :  date difference in month, the value will be -1 if it is bigger than 12 or input date is later than
 	 * current time.
@@ -91,11 +94,13 @@ public class JapanStock implements IGetStockData {
 		int inputYear = Integer.parseInt(date.subSequence(0, 4).toString());
 		int inputMonth = Integer.parseInt(date.subSequence(4, 6).toString());
 		
-		System.out.println("local Year " + currentYear + " local month " + currentMonth
-				+ " inputYear " + inputYear + " inputMonth " + inputMonth);
+		//System.out.println("local Year " + currentYear + " local month " + currentMonth
+		//		+ " inputYear " + inputYear + " inputMonth " + inputMonth);
 		
 		int currentTime = currentYear*12 + currentMonth;
 		int inputTime = inputYear*12 + inputMonth;
+		//System.out.println(currentTime);
+		//System.out.println(inputTime);
 		
 		if (inputTime > currentTime) {
 			System.out.println("Error, the date is later than current time");
@@ -112,6 +117,7 @@ public class JapanStock implements IGetStockData {
 	}
 	
 	/**
+	 * Get the last part of the URL that changes based on the input month
 	 * @param date. Format should be "yyyymmdd"
 	 * @return . URL of the stock data
 	 */
@@ -119,7 +125,7 @@ public class JapanStock implements IGetStockData {
 		int diff = getDateDifference(date);
 		String day;
 		String url = null;
-		if (diff == -1)
+		if (diff == -1) // when diff is -1, the input date is wrong
 		{
 			System.out.println("Could not get the URL");
 			return url;
@@ -129,18 +135,21 @@ public class JapanStock implements IGetStockData {
 			url = jpx_url + jpx_short_current;
 		} else {
 			if (diff < 10) {
-				day = "0" + Integer.toString(diff-1); //temp solution
+				//day = "01";
+				day = "0" + Integer.toString(diff); //temp solution 
 			} else {
+				//day = "01";
 				day = Integer.toString(diff); //temp solution
 			}
 			url = jpx_url + jpx_short_archived_base + "00-archives-" + day + ".html";
 		}
-		System.out.println("URL is: " + url);
+		System.out.println("Original Resource(JP): " + url + "\n");
 		return url;
 	}
 
 	/**
-	 * Parse the webpage download from https://www.jpx.co.jp
+	 * Parse the web page download from https://www.jpx.co.jp
+	 * This is to get the link for the within the web page
 	 * @param filePath ： webpage's path
 	 * @param fileName ： webpage's name
 	 * @param date: format is "YYYYMMDD", it should be Japan local time
@@ -189,9 +198,9 @@ public class JapanStock implements IGetStockData {
 			System.out.println(date + " Stock market is closed");
 			return link;
 		}
-		System.out.println("link is " + link);
+		//System.out.println("link is " + link);
 		link = jpx_url + link + "xls";
-		System.out.println("link is " + link);
+		//System.out.println("link is " + link);
 		return link;
 		
 	}
@@ -210,7 +219,7 @@ public class JapanStock implements IGetStockData {
         
         //iterate each cell and save it in the ArrayList
         for(int i = 0;i < sheetNumber;i++) {
-      //      System.out.println("############## " + sheetNameList[i] + " ##############");
+        	//System.out.println("############## " + sheetNameList[i] + " ##############");
             //Get row's number in each sheet
             rows = sheetList[i].getRows();
             for(int j = 0;j < rows;j++) {
@@ -218,7 +227,7 @@ public class JapanStock implements IGetStockData {
                 Cell [] cellList = sheetList[i].getRow(j);
                 StockItem stockItem = new StockItem();
                 if (cellList[1].getContents().contains("/") == false) {
-      //          	System.out.println("Skip this row" + cellList[0].getContents());
+                	//System.out.println("Skip this row" + cellList[0].getContents());
                 	continue;
                 }
                 stockItem.date = cellList[1].getContents();

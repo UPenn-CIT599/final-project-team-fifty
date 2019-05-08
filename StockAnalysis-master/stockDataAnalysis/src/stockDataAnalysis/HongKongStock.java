@@ -14,7 +14,6 @@ public class HongKongStock implements IGetStockData {
 
 	public final static String baseUrl =  "https://www.sfc.hk/web/EN/pdf/spr/";
 
-
 	/* (non-Javadoc)
 	 * @see stockDataAnalysis.IGetStockData#getShortPositions(java.lang.String, java.lang.String, java.lang.String)
 	 */
@@ -24,7 +23,6 @@ public class HongKongStock implements IGetStockData {
 	
 	public ArrayList <StockItem> getShortPositions(String date) {
 	
-		
 		//Get Year, Month and Day
 		int year  = Integer.parseInt(date.subSequence(0, 4).toString());
 		int month = Integer.parseInt(date.subSequence(4, 6).toString());
@@ -42,7 +40,7 @@ public class HongKongStock implements IGetStockData {
 		
 		if (dayOfWeek != 6 )
 		{
-			System.out.println("The date is not friday, get the data of Last Friday's");
+			System.out.println("Note: The requested date for Hong Kong is not Friday. Replacing with the last Friday's data.");
 			calendar.set(Calendar.WEEK_OF_YEAR, weekOfYear - 1);
 			calendar.set(Calendar.DAY_OF_WEEK, 6);
 			
@@ -50,7 +48,7 @@ public class HongKongStock implements IGetStockData {
 			month = calendar.get(Calendar.MONTH) + 1;
 			day   = calendar.get(Calendar.DAY_OF_MONTH);
 			
-			System.out.println("Year " + year + " Month " + month + " Day " + day);						
+			//System.out.println("Year " + year + " Month " + month + " Day " + day);						
 		}
 		String strMonth;
 		String strDay;
@@ -61,7 +59,7 @@ public class HongKongStock implements IGetStockData {
 			strMonth = Integer.toString(month);
 		}
 		
-		if (day <10 ) {
+		if (day < 10 ) {
 			strDay = "0" + day;
 		} else {
 			strDay = Integer.toString(day);
@@ -70,7 +68,7 @@ public class HongKongStock implements IGetStockData {
 		String url = baseUrl + year + "/" + strMonth + "/" + strDay + "/"
 				     + "Short_Position_Reporting_Aggregated_Data_" + year + strMonth + strDay + ".csv";
 		
-		//Save webpage in current path
+		//Save web page in current path
 		Path currentRelativePath = Paths.get("");
 		String filePath = currentRelativePath.toAbsolutePath().toString();
 		filePath = filePath + "/temp";
@@ -79,6 +77,9 @@ public class HongKongStock implements IGetStockData {
 		if (StockDataDownload.HttpDownloadFile(url, filePath, fileName) == false) {
 			System.out.println(url + " is not avaliable");
 			return null;
+		}
+		else {
+			System.out.println("Original Resource(HK): " + url + "\n");
 		}
 		
 		ArrayList<StockItem> stockList;

@@ -38,13 +38,13 @@ public class StockDataDownload {
 				saveDir.mkdir();
 			}
 			File file = new File(saveDir + File.separator + fileName);
-			System.out.println("file path is " + file);
+			//System.out.println("file path is " + file);
             FileOutputStream fs = new FileOutputStream(file);
  
             byte[] buffer = new byte[1204];
             while ((byteread = inStream.read(buffer)) != -1) {
                 bytesum += byteread;
-                System.out.println(bytesum);
+                //System.out.println(bytesum);
                 fs.write(buffer, 0, byteread);
             }
             fs.close();

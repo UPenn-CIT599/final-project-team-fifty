@@ -7,67 +7,48 @@ import java.util.Collections;
 
 public class stockDataAnalysis {
 	
-	
-
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
 		
-		// TODO Auto-generated method stub
-
-		//Example for getting data from Japan stock market
-		IGetStockData Japan = new JapanStock();
+		String date_JP = "20190319"; // Date for Japan (JP)
+		 System.out.println("Request date for JP: " + date_JP);
+		  
+		//Get short position for Japan
+		IGetStockData Japan = new JapanStock(); //'Japan' is an instance of JapanStock class
+		ArrayList <StockItem> japanStockList; //Short position for JP is stored in the JapanStockList ArrayList
+		japanStockList = Japan.getShortPositions(date_JP);
+		//System.out.println(japanStockList);
 		
-		ArrayList <StockItem> japanStockList;
-
-		String date = "20190319";
-
-		japanStockList = Japan.getShortPositions(date);
-
-		//Sort the stock list based on short ratio
+		//Sort the stock list for JP based on short ratio
         ComparaShortRatio com = new ComparaShortRatio();
+        //System.out.println(com);
         Collections.sort(japanStockList,com);
-
-	/*	
-		if (japanStockList != null) {
-			for (StockItem stockItem : japanStockList) {
-				System.out.println("date " + stockItem.date + " code " + stockItem.stockCode + " shortRatio " + stockItem.shortRatio);
-			}
-		}
-  */
-	
-		//Example for getting data from HongKong stock market
-		IGetStockData HongKong = new HongKongStock();
-		ArrayList <StockItem> hkStockList;
-
-		date = "20190415";
+	   
+		String date_HK = "20190415"; // Date for HK
+		System.out.println("Request date for HK: " + date_HK);
 		
-		hkStockList = HongKong.getShortPositions(date);
+		//Get short position for Hong Kong (HK)
+		IGetStockData HongKong = new HongKongStock(); // 'HongKong' is an instance of HongKongStock class		
+		ArrayList <StockItem> hkStockList; //Short position for HK is stored in the HongStockList ArrayList
+		hkStockList = HongKong.getShortPositions(date_HK);
 		
+		//Sort the stock list for HK based on short ratio
         com = new ComparaShortRatio();
         Collections.sort(hkStockList,com);
         
+        // Change the format for the shortRatio property for each item in the hkStockList
         for (StockItem item:hkStockList) {
         	String ratio = String.format("%.2f", item.shortRatio);
         	item.shortRatio = Double.parseDouble(ratio);
         }
 
-   /*     
-		if (hkStockList != null) {
-			for (StockItem stockItem : hkStockList) {
-				System.out.println("date " + stockItem.date + " code " + stockItem.stockCode + " shortRatio " + stockItem.shortRatio);
-			}
-		}
-	*/
+        // Print the result
         int top_n = 5;
-        System.out.println("******************* TOP " + top_n + " short share lists *******************");
+        System.out.println("******************* TOP " + top_n + " Stocks by Short Ratio *******************");
         System.out.println("*****Japan Market*****  " + "  ***** HongKong Market *****");
         System.out.println("    Code " + "   Short Ratio" + "    Code" + "     Short Ratio");
         for (int i=0; i <top_n; i++) {
         	System.out.println("    " +japanStockList.get(i).stockCode + "       " + japanStockList.get(i).shortRatio
         			+ "       " + hkStockList.get(i).stockCode + "      " + hkStockList.get(i).shortRatio);
         }
-	
-
 	}
-
 }
