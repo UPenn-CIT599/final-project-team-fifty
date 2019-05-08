@@ -7,8 +7,8 @@ Summary: The program will generate top 5 stocks for each market (Japan and Hong 
 
 We crawled data from Securities and Futures Commission and Tokyo Stock Exchanges website. 
 
-The structure of the codes written can be found here(to be updated):
-
+The structure of the codes written can be found here:
+<https://drive.google.com/file/d/153fIDL1SUanaRQXuSMo0BKOCHfxXul-y/view?usp=sharing>
 ```
 
 ### Information contained in the disclosure:
